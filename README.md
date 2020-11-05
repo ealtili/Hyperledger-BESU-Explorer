@@ -208,7 +208,7 @@ docker run --rm -p 8080:80 -e APP_NODE_URL=http://localhost:8545 alethio/ethereu
 
 3. Open http://localhost:8080 in your browser to view the Lite Explorer. We are using port 8080 to run the Ethereum Lite Explorer so the EthStats Lite can use port 80, allowing you to run both at the same time.
 
-*** Alethio EthStats Lite (network monitor) ***
+***Alethio EthStats Lite (network monitor)***
 
 See active nodes or add your own on the following running deployments of the EthStats Network Monitor
 
