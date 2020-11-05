@@ -14,7 +14,7 @@ templates:
 releases:
   - name: besu
     <<: *default
-    chart: ./charts/besu
+    chart: ./Charts/besu
     wait: true
       
   - name: ingress-nginx
@@ -23,7 +23,7 @@ releases:
 
   - name: alethio-lite-explorer
     <<: *default
-    chart: ./charts/alethio-lite-explorer
+    chart: ./Charts/alethio-lite-explorer
         
     needs:
       - besu-explorer/besu
