@@ -289,7 +289,7 @@ config:
   ##
   ## NOTE: This option is ignored in networks using Clique and IBFT 2.0 consensus protocols.
   ##
-  minerCoinbase: ""0xfe3b557e8fb62b89f4916b721be55ceb828dbd73""
+  minerCoinbase: "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73"
 
   ## Enables mining when the node is started. Default is false.
   ##
