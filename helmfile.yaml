@@ -14,14 +14,14 @@ templates:
 releases:
   - name: besu
     <<: *default
-    chart: ./charts/besu-node
+    chart: ./charts/besu
     wait: true
       
   - name: ingress-nginx
     <<: *default
     chart: ingress-nginx/ingress-nginx
 
-  - name: ethereum-lite-explorer
+  - name: alethio-lite-explorer
     <<: *default
     chart: ./charts/alethio-lite-explorer
         

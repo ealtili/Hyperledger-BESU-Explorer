@@ -1,5 +1,5 @@
 apiVersion: v2
-name: ethereum-lite-explorer
+name: alethio-lite-explorer
 description: Alethio's Light Weight Open Source Ethereum Explorer
 
 home: https://github.com/Alethio/ethereum-lite-explorer
