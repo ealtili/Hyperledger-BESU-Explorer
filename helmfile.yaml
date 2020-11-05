@@ -12,7 +12,7 @@ templates:
       - namespace: '{{`{{ .Release.Namespace }}`}}'
 
 releases:
-  - name: besu-node
+  - name: besu
     <<: *default
     chart: ./charts/besu-node
     wait: true
@@ -21,7 +21,7 @@ releases:
     <<: *default
     chart: ingress-nginx/ingress-nginx
 
-  - name: explorer
+  - name: ethereum-lite-explorer
     <<: *default
     chart: ./charts/alethio-lite-explorer
         
