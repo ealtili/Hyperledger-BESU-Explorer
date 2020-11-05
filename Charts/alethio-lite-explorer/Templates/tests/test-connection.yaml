@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "aleth-lite-explorer.fullname" . }}-test-connection"
+  labels:
+{{ include "aleth-lite-explorer.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "aleth-lite-explorer.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

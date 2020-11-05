@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ include "besu.fullname" . }}
+  labels:
+    {{- include "besu.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ template "besu.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "besu.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "besu.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          args: ["--config-file={{ .Values.config.configPath }}"]
+          ports:
+            - name: discovery-udp
+              containerPort: {{ .Values.config.p2pPort }}
+              protocol: UDP
+            - name: discovery-tcp
+              containerPort: {{ .Values.config.p2pPort }}
+              protocol: TCP
+            {{- if .Values.config.rpcHttpEnabled }}
+            - name: rpc-http
+              containerPort: {{ .Values.config.rpcHttpPort }}
+            {{- end }}
+            {{- if .Values.config.rpcWsEnabled }}
+            - name: rpc-ws
+              containerPort: {{ .Values.config.rpcWsPort }}
+            {{- end }}
+            {{- if .Values.config.graphQlEnabled }}
+            - name: rpc-graphql
+              containerPort: {{ .Values.config.graphQlHttpPort }}
+            {{- end }}
+          {{- if .Values.config.rpcHttpEnabled }}
+          livenessProbe:
+            httpGet:
+              port: rpc-http
+              path: /liveness
+            initialDelaySeconds: 120
+            periodSeconds: 300
+          readinessProbe:
+            httpGet:
+              port: rpc-http
+              path: /liveness
+            initialDelaySeconds: 120
+            periodSeconds: 300
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.config.dataPath | quote }}
+            - name: config
+              mountPath: {{ .Values.config.configPath | quote }}
+              subPath: config.toml
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "besu.fullname" . }}-data{{- end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: config
+          configMap:
+            name: {{ template "besu.fullname" . }}-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+    {{- end }}
