@@ -82,7 +82,7 @@ ingress:
 
   ## Add annotations as required for your Ingress controller.
   ##
-  annotations: {}
+  annotations: 
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -90,7 +90,7 @@ ingress:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
   
-  hosts: []
+  hosts: 
      - host: #lite-explorer.local
        paths: 
         - path: "/explorer(/|$)(.*)"
