@@ -8,5 +8,5 @@ roleRef:
   name: admin
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ include "besu.serviceAccountName" . }}
   namespace: {{ .Values.namespace }}
