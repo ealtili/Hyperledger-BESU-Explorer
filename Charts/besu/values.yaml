@@ -140,7 +140,7 @@ persistence:
   ##   - Network: Ropsten | Sync: Full -> 1000Gi
   ##   - Network: Ropsten | Sync: Fast -> 200Gi
   ##
-  size: 10Gi
+  size: 5Gi
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
