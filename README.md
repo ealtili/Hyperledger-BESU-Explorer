@@ -65,24 +65,23 @@ $ docker run -p 80:80 -v /your-config-dir/config.json:/usr/share/nginx/html/conf
 ```
 ### Running in Kubernetes
 You can deploy the Lite Explorer in Kubernetes using the following steps:
-- `cd .kubernetes`
-- Run `./deploy.sh` to deploy, uses `config.default.json` as config.
-- Use for example `./deploy.sh ../config.memento.json` to select other config files.
-- Run `./remove.sh` to remove
 
-Helm charts is also available in `./kubernetes/charts/`.
+Helm charts is also available in `./charts/`.
 
 ```shell
-cd .kubernetes/charts
-helm install ethereum-lite-explorer ./ethereum-lite-explorer
+cd ./charts/alethio-lite-explorer
+helm install alethio-lite-explorer ./alethio-lite-explorer
 ```
-values.yaml file has Default values for ethereum-lite-explorer. You need to declare variables or modify values.yaml to be passed into your templates.
+values.yaml file has Default values for alethio-lite-explorer. You need to declare variables or modify values.yaml to be passed into your templates.
+
+### ***DEPLOYING WITH HELM ***
 
 Helmfile repo deploys an Hyperledger Besu node connected to the Gorli testnet and an Alethio Lite Explorer connected to that Node.
 
 helmfile sync
 
 That should be it. Sometime the LoadBalancer IP is not available while rendering the chart and a second helmfile sync may be needed.
+If baremetal deployment will be used ingress controller should use NodePort
 
 ### Example Setups
 #### With Memento
