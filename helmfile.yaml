@@ -26,5 +26,5 @@ releases:
     chart: ./charts/alethio-lite-explorer
         
     needs:
-      - besu-explorer/node
+      - besu-explorer/besu-node
       - besu-explorer/ingress-nginx
