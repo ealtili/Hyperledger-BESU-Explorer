@@ -1,8 +1,6 @@
 apiVersion: v2
 name: alethio-lite-explorer
-description: Alethio's Light Weight Open Source Ethereum Explorer
-
-home: https://github.com/Alethio/ethereum-lite-explorer
+description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -27,4 +25,3 @@ depedencies:
   - name: ingress-nginx
     version: latest
     repository: https://kubernetes.github.io/ingress-nginx
-

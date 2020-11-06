@@ -76,12 +76,24 @@ values.yaml file has Default values for alethio-lite-explorer. You need to decla
 
 ### ***DEPLOYING WITH HELM ***
 
-Helmfile repo deploys an Hyperledger Besu node connected to the Gorli testnet and an Alethio Lite Explorer connected to that Node.
+Helmfile deploys an Hyperledger Besu node connected to the Gorli testnet and an Alethio Lite Explorer. To Deploy
+ 
+```
+ helmfile sync
+```
+ If LoadBalancer IP is not available while deploying the chart a second helmfile sync may be needed. 
 
-helmfile sync
+ 
+Service (type=LoadBalancer) that exposes the RPC port (default=8545) on the node service loadbalancer's external IP. an ingress-nginx controller to handle ingress traffic. Alethio Lite Explorer that is accessible through an Ingress
 
-That should be it. Sometime the LoadBalancer IP is not available while rendering the chart and a second helmfile sync may be needed.
-If baremetal deployment will be used ingress controller should use NodePort
+to debug
+
+```
+helmfile --debug sync
+```
+
+
+
 
 ### Example Setups
 #### With Memento

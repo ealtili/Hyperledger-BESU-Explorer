@@ -1,86 +1,89 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  namespace: {{ .Values.namespace }}
-  name: {{ include "besu.fullname" . }}
+  name: {{ template "besu.fullname" . }}
   labels:
     {{- include "besu.labels" . | nindent 4 }}
+  namespace: {{ .Values.namespace }}
 spec:
-  serviceName: {{ template "besu.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "besu.selectorLabels" . | nindent 6 }}
+  serviceName: {{ template "besu.fullname" . }}
   template:
     metadata:
       labels:
         {{- include "besu.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets: {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
-          args: ["--config-file={{ .Values.config.configPath }}"]
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          args: ["--config-file=/etc/besu/config.toml", "--nat-method=KUBERNETES"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.cpuRequest }}
+              memory: {{ .Values.resources.memRequest }}
+            limits:
+              cpu: {{ .Values.resources.cpuLimit }}
+              memory: {{ .Values.resources.memLimit }}
+          volumeMounts:
+            - name: config-toml
+              mountPath: /etc/besu
+              readOnly: true
+            - name: data
+              mountPath: {{ .Values.config.dataPath }}
           ports:
-            - name: discovery-udp
-              containerPort: {{ .Values.config.p2pPort }}
-              protocol: UDP
-            - name: discovery-tcp
-              containerPort: {{ .Values.config.p2pPort }}
+            {{- if .Values.config.rpc.enabled  }}
+            - name: rpc
+              containerPort: {{ .Values.config.rpc.port }}
               protocol: TCP
-            {{- if .Values.config.rpcHttpEnabled }}
-            - name: rpc-http
-              containerPort: {{ .Values.config.rpcHttpPort }}
             {{- end }}
-            {{- if .Values.config.rpcWsEnabled }}
-            - name: rpc-ws
-              containerPort: {{ .Values.config.rpcWsPort }}
+            {{- if .Values.config.ws.enabled  }}
+            - name: ws
+              containerPort: {{ .Values.config.ws.port }}
+              protocol: TCP
             {{- end }}
-            {{- if .Values.config.graphQlEnabled }}
-            - name: rpc-graphql
-              containerPort: {{ .Values.config.graphQlHttpPort }}
+            {{- if .Values.config.graphql.enabled  }}
+            - name: graphql
+              containerPort: {{ .Values.config.graphql.port }}
+              protocol: TCP
             {{- end }}
-          {{- if .Values.config.rpcHttpEnabled }}
+            {{- if .Values.config.p2p.enabled  }}
+            - name: rlpx
+              containerPort: {{ .Values.config.p2p.port }}
+              protocol: TCP
+            - name: discovery
+              containerPort: {{ .Values.config.p2p.port }}
+              protocol: UDP
+            {{- end }}
           livenessProbe:
             httpGet:
-              port: rpc-http
               path: /liveness
-            initialDelaySeconds: 120
-            periodSeconds: 300
+              port: rpc
+            initialDelaySeconds: 60
+            periodSeconds: 30
           readinessProbe:
             httpGet:
-              port: rpc-http
-              path: /liveness
+              path: /readiness
+              port: rpc
             initialDelaySeconds: 120
-            periodSeconds: 300
-          {{- end }}
-          volumeMounts:
-            - name: data
-              mountPath: {{ .Values.config.dataPath | quote }}
-            - name: config
-              mountPath: {{ .Values.config.configPath | quote }}
-              subPath: config.toml
-          resources: {{- toYaml .Values.resources | nindent 12 }}
+            periodSeconds: 30  
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
       volumes:
-        - name: data
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "besu.fullname" . }}-data{{- end }}
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
-        - name: config
+        - name: config-toml
           configMap:
-            name: {{ template "besu.fullname" . }}-config
-      {{- with .Values.nodeSelector }}
-      nodeSelector: {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity: {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations: {{- toYaml . | nindent 8 }}
-    {{- end }}
+            name: {{ template "besu.fullname" . }}-toml-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: 
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ .Values.storage.pvcSizeRequest }}"
