@@ -31,8 +31,6 @@ releases:
     <<: *default
     chart: ./charts/alethio-lite-explorer
     values:
-      - resources:
-          memRequest: 500m
       - config:
           appNode:
             serviceName: "besu-goerli-node"
