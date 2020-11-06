@@ -7,33 +7,24 @@ repositories:
 
 templates:
   default: &default
-    namespace: besu
+    namespace: besu-explorer
     valuesTemplate:
       - namespace: '{{`{{ .Release.Namespace }}`}}'
 
 releases:
-  - name: node
+  - name: besu
     <<: *default
-    chart: ./charts/besu-node
+    chart: ./Charts/besu
     wait: true
-    values:
-      - resources:
-          memRequest: 500m
-      - config:
-          network: "goerli" 
-      - fullnameOverride: "besu-goerli-node"
-
+      
   - name: ingress-nginx
     <<: *default
     chart: ingress-nginx/ingress-nginx
 
-  - name: explorer
+  - name: alethio-lite-explorer
     <<: *default
-    chart: ./charts/alethio-lite-explorer
-    values:
-      - config:
-          appNode:
-            serviceName: "besu-goerli-node"
+    chart: ./Charts/alethio-lite-explorer
+        
     needs:
-      - besu/node
-      - besu/ingress-nginx
+      - besu-explorer/besu
+      - besu-explorer/ingress-nginx

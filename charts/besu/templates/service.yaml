@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "besu.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "besu.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "besu.selectorLabels" . | nindent 4 }}
+  ports:
+    {{- if .Values.config.rpcHttpEnabled }}
+    - name: rpc-http
+      port: {{ .Values.config.rpcHttpPort }}
+      targetPort: {{ .Values.config.rpcHttpPort }}
+      protocol: TCP
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.rpcHttpNodePort }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.config.rpcWsEnabled }}
+    - name: rpc-ws
+      port: {{ .Values.config.rpcWsPort }}
+      targetPort: {{ .Values.config.rpcWsPort }}
+      protocol: TCP
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.rpcWsNodePort }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.config.graphqlHttpEnabled }}
+    - name: rpc-graphql
+      port: {{ .Values.config.graphqlHttpPort }}
+      targetPort: {{ .Values.config.graphqlHttpPort }}
+      protocol: TCP
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.graphqlNodePort }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.config.metricsEnabled }}
+    - name: metrics
+      port: {{ .Values.config.metricsPort }}
+      targetPort: {{ .Values.config.metricsPort }}
+      protocol: TCP
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.metricsNodePort }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.config.p2pEnabled }}
+    - name: rlpx
+      port: {{ .Values.config.p2pPort }}
+      targetPort: {{ .Values.config.p2pPort }}
+      protocol: TCP
+      {{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.p2pNodePort }}
+      {{- end }}
+    {{- end }}

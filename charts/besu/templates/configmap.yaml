@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: {{ template "besu.fullname" . }}-config
+  labels: {{ include "besu.labels" . | nindent 4 }}
+data:
+  config.toml: |
+    # General
+    data-path = {{ .Values.config.dataPath | quote }}
+    network = {{ .Values.config.network | quote }}
+    sync-mode = {{ .Values.config.syncMode | quote }}
+    logging = {{ .Values.config.logging | quote }}
+    {{- if .Values.config.bootnodes }}
+    bootnodes = [{{- range $e := .Values.config.bootnodes }} {{ $e | quote }}, {{- end }}]
+    {{- end }}
+    {{- if .Values.config.bannedNodeIds }}
+    banned-node-ids = [{{- range $e := .Values.config.bannedNodeIds }} {{ $e | quote }}, {{- end }}]
+    {{- end }}
+    min-gas-price = {{ .Values.config.minGasPrice | quote }}
+    
+    # Network
+    discovery-enabled = {{ .Values.config.discoveryEnabled }}
+    host-whitelist = [{{- range $e := .Values.config.hostWhitelist }} {{ $e | quote }}, {{- end }}]
+    nat-method = {{ .Values.config.natMethod | quote }}
+    max-peers = {{ .Values.config.maxPeers }}
+    p2p-enabled = {{ .Values.config.p2pEnabled }}
+    p2p-host = {{ .Values.config.p2pHost | quote }}
+    p2p-interface = {{ .Values.config.p2pInterface | quote }}
+    p2p-port = {{ .Values.config.p2pPort }}
+    remote-connections-limit-enabled = {{ .Values.config.remoteConnectionsLimitEnabled }}
+    remote-connections-max-percentage = {{ .Values.config.remoteConnectionsMaxPercentage }}
+    
+    {{- if .Values.config.rpcHttpEnabled -}}
+    # RPC HTTP
+    rpc-http-enabled = {{ .Values.config.rpcHttpEnabled }}
+    rpc-http-api = [{{- range $e := .Values.config.rpcHttpApi }} {{ $e | quote }}, {{- end }}]
+    rpc-http-cors-origins = [{{- range $e := .Values.config.rpcHttpCorsOrigins }} {{ $e | quote }}, {{- end }}]
+    rpc-http-host = {{ .Values.config.rpcHttpHost | quote }}
+    rpc-http-port = {{ .Values.config.rpcHttpPort }}
+    {{- end }}
+    
+    {{- if .Values.config.graphqlHttpEnabled -}}
+    # RPC GraphQL
+    graphql-http-enabled = {{ .Values.config.graphqlHttpEnabled }}
+    graphql-http-cors-origins = [{{- range $e := .Values.config.graphqlHttpCorsOrigins }} {{ $e | quote }}, {{- end }}]
+    graphql-http-host = {{ .Values.config.graphqlHttpHost | quote }}
+    graphql-http-port = {{ .Values.config.graphqlHttpPort }}
+    {{- end -}}
+    
+    {{- if .Values.config.metricsEnabled -}}
+    # Metrics
+    metrics-enabled = {{ .Values.config.metricsEnabled }}
+    metrics-host = {{ .Values.config.metricsHost | quote }}
+    metrics-port = {{ .Values.config.metricsPort }}
+    {{- end -}}
+    
+    {{- if .Values.config.metricsPushEnabled -}}
+    # Push Metrics
+    metrics-push-enabled = {{ .Values.config.metricsPushEnabled }}
+    metrics-push-host = {{ .Values.config.metricsPushHost | quote }}
+    metrics-push-interval = {{ .Values.config.metricsPushInterval }}
+    metrics-push-port = {{ .Values.config.metricsPushPort }}
+    metrics-push-prometheus-job = {{ .Values.config.metricsPushPrometheusJob | quote }}
+    {{- end -}}
+    
+    {{- if or .Values.config.metricsEnabled .Values.config.metricsPushEnabled -}}
+    metrics-category = [{{- range $e := .Values.config.metricsCategory }} {{ $e | quote }}, {{- end }}]
+    {{- end -}}
+    
+    {{- if .Values.config.minerEnabled -}}
+    # Mining
+    miner-enabled = {{ .Values.config.minerEnabled }}
+    {{- if .Values.config.minerCoinbase -}}
+    miner-coinbase = {{ .Values.config.minerCoinbase | quote }}
+    {{- end -}}
+    miner-extra-data = {{ .Values.config.minerExtraData | quote }}
+    {{- end -}}
