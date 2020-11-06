@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 image:
   # In scenario's that require the use of a subpath the fixed subpah needs to be configured in the build.
-  repository: bverschueren/alethio-lite-explorer-subpath
+  repository: alethio/ethereum-lite-explorer
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 namespace: ""
 replicaCount: 1

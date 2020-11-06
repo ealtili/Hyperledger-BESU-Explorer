@@ -7,7 +7,7 @@ repositories:
 
 templates:
   default: &default
-    namespace: assignment
+    namespace: besu-explorer
     valuesTemplate:
       - namespace: '{{`{{ .Release.Namespace }}`}}'
 
@@ -31,9 +31,11 @@ releases:
     <<: *default
     chart: ./charts/alethio-lite-explorer
     values:
+    resources:
+          memRequest: 500m
       - config:
           appNode:
             serviceName: "besu-goerli-node"
     needs:
-      - assignment/node
-      - assignment/ingress-nginx
+      - besu-explorer/node
+      - besu-explorer/ingress-nginx
