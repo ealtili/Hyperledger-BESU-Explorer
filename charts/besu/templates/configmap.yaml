@@ -21,7 +21,7 @@ data:
     
     # Network
     discovery-enabled = {{ .Values.config.discoveryEnabled }}
-    host-whitelist = [{{- range $e := .Values.config.hostWhitelist }} {{ $e | quote }}, {{- end }}]
+    host-allowlist = [{{- range $e := .Values.config.hostAllowlist }} {{ $e | quote }}, {{- end }}]
     nat-method = {{ .Values.config.natMethod | quote }}
     max-peers = {{ .Values.config.maxPeers }}
     p2p-enabled = {{ .Values.config.p2pEnabled }}
