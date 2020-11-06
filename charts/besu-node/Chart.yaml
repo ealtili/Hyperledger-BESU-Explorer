@@ -1,6 +1,7 @@
 apiVersion: v2
-name: alethio-lite-explorer
-description: A Helm chart for Kubernetes
+name: besu
+description: A Helm chart to deploy a Besu node on Kubernetes
+icon: https://besu.hyperledger.org/en/stable/favicon.svg
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -21,7 +22,3 @@ version: 0.1.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 appVersion: 1.16.0
-depedencies:
-  - name: nginx-ingress
-    version: latest
-    repository: https://kubernetes-charts.storage.googleapis.com/
