@@ -7,7 +7,7 @@ repositories:
 
 templates:
   default: &default
-    namespace: assignment
+    namespace: besu
     valuesTemplate:
       - namespace: '{{`{{ .Release.Namespace }}`}}'
 
@@ -35,5 +35,5 @@ releases:
           appNode:
             serviceName: "besu-goerli-node"
     needs:
-      - assignment/node
-      - assignment/ingress-nginx
+      - besu/node
+      - besu/ingress-nginx
