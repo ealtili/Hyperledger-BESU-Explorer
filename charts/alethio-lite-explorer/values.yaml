@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 image:
   # In scenario's that require the use of a subpath the fixed subpah needs to be configured in the build.
-  repository: alethio/ethereum-lite-explorer
+  repository: ealtili/alethio-lite-explorer
   tag: latest
   pullPolicy: IfNotPresent
 
