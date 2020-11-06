@@ -11,7 +11,7 @@ The basic functionality of the explorer is implemented via a series of open-sour
 ### Prerequisites
 Please make sure you have the following installed and running properly
 - [Docker](https://www.docker.com/)
-- [A Kubernetes Cluster] (https://labs.play-with-k8s.com/) 
+- A Kubernetes Cluster 
 - A JSON-RPC enabled and accessible Ethereum Client, some examples:
     * [An Infura Account](#with-infura)
     * [Parity Light Client](#with-parity-light-client)
@@ -94,6 +94,10 @@ helmfile --debug sync
 
 
 
+
+Service (type=LoadBalancer) that exposes the RPC port (default=8545) on the node service loadbalancer's external IP.
+an ingress-nginx controller to handle ingress traffic.
+Alethio Lite Explorer that is accessible through an Ingress
 
 ### Example Setups
 #### With Memento
